@@ -11,10 +11,17 @@ install:
   - pip install .
   # Install extra requirements for running tests and building docs.
   - pip install -r requirements-dev.txt
+env:
+  global:
+      # Doctr deploy key for vstadnytskyi/dataq-di-2008
+      - secure: "fIG1qGYh7PQ+lLx5kGcgnfiEfHQwAtTbevqq2exglp5Sy5c067KUYVAofyboJnWnBqaWOdsyn6l6vV1AkU5IhkQ4+Ie+mxQ4HnKadrWzHHi4KQi8YoohFXZuBXLOj9vIWYWq/99Xe1mhGbtP02OMFDB+3e5OR6u1Dm0o2FG3vINLLYuM6bxWRixKBk4MrPDDTRHOwzCR/DkcSoEE1jKueoqL0HiDZ11+wi6gwMiMgplyVHl5A7sivN3QBuackF+LcmOjzOcJm8zNM7wQpN0wlBlXJ0e+4b9qOz3qSBOOTQI+2gAZuigj8V1FRXOZOuOoJ3X+RE5+hKn6ct5vwUBeldEn0aawt77BsXpV6s2IScZF1GyH+cOB9WlYME/fnTZtc14UC4CvtZys5e9MTt3ud9m33E50M2Vy1dFWsp94y0Fa5xrAHNmAnkraXM4POlKkt2rrWw25MnTgBx+aAyIpO3IJFt0yqZEHt3Dt8J27y3QnmKWvSVTY8Nxzh53vdk2Gsb9f5AgP7X9ZCZjVeOB8vc+x8kcSNGg1yBaCGX2oUjMCwczi8KJ2PkDSdIvhZ+q4S5Wfp4FxQ4lzCLGW8+LL3/S1aaQF27xeQMISgKe2z3u3KaOGXH1//8NwsV+J87FNMoW5/2LqdiXAZa7fWwnTR37ow2dJUuI25hSVG4/RiLE="
 
 script:
   - coverage run -m pytest  # Run the tests and check for test coverage.
   - coverage report -m  # Generate test coverage report.
   - codecov  # Upload the report to codecov.
   - flake8  # Enforce code style ('relaxed' line length limit is set in .flake8 config file).
+  - set -e  # If any of the following steps fail, just stop at that point.
   - make -C docs html  # Build the documentation.
+  - pip install doctr
+  - doctr deploy --built-docs docs/build/html .  # Publish the documentation.
