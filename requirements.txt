@@ -3,5 +3,4 @@ caproto
 pyepics
 numpy
 pyusb
-struct
 wx
