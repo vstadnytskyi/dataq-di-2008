@@ -4,3 +4,4 @@ pyepics
 numpy
 pyusb
 struct
+wx
