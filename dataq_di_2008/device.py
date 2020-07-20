@@ -190,6 +190,7 @@ def read_config_file(filename):
     return config, flag
 
 def start(config_file = ''):
+    from dataq_di_2008 import Device,read_config_file
     config, flag = read_config_file(config_file)
     device = Device()
     device.config = config
