@@ -11,5 +11,7 @@ dataq di 2008  Documentation
 
    installation
    usage
+   driver
+   device
    release-history
    min_versions

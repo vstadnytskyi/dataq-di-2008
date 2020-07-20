@@ -124,12 +124,15 @@ class Driver(object):
 
 
     def discover(self, idProduct = 0x2008, serial_number = None):
-        """the function allows to discover DI-2008 device.
+        """
+        the function allows to discover DI-2008 device.
 
-            returns: flag if a device(devices) are found.
-            assigns: self.available_ports list entry
-                    [0] - COM port namer
-                    [1] - serial number
+        returns: flag if a device(devices) are found.
+
+        assigns: self.available_ports list entry
+                [0] - COM port namer
+                [1] - serial number
+
         """
         import usb.core
         flag = False
@@ -146,10 +149,7 @@ class Driver(object):
         return dev
 
 
-    """Set and Get persistent_property"""
-    # functions for persistent properties if needed
-
-    """Basic serial communication functions"""
+    #####Basic serial communication functions
 
     def read(self,N = 0, timeout = 1000):
         if N == 0:
