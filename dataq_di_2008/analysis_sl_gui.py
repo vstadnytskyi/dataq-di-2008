@@ -43,11 +43,13 @@ class PanelTemplate(wx.Frame):
             main_sizer = wx.BoxSizer(wx.VERTICAL)
             topSizer = wx.BoxSizer(wx.VERTICAL)
 
-
+            font = wx.Font(22, wx.ROMAN, wx.ITALIC, wx.NORMAL)
             for i in range(8):
                 self.sizer[f'MATH{i}'] = wx.BoxSizer(wx.HORIZONTAL)
                 self.label[f'MATH{i}'] = wx.StaticText(self.panel, label= f'MATH {i}:', style = wx.ALIGN_CENTER)
-                self.field[f'MATH{i}'] = epics.wx.PVText(self.panel, pv=f'MacProBoxSL:MATH{i}',minor_alarm = wx.Colour(5, 6, 7),auto_units = True, size = (100,20))
+                self.field[f'MATH{i}'] = epics.wx.PVText(self.panel, pv=f'MacProBoxSL:MATH{i}',minor_alarm = wx.Colour(5, 6, 7),auto_units = True, size = (150,30));
+                self.field[f'MATH{i}'].SetFont(font)
+                self.label[f'MATH{i}'].SetFont(font)
                 self.sizer[f'MATH{i}'].Add(self.label[f'MATH{i}'] , 0)
                 self.sizer[f'MATH{i}'].Add(self.field[f'MATH{i}'] , 0)
 
@@ -55,8 +57,8 @@ class PanelTemplate(wx.Frame):
 
             for i in range(8):
                 main_sizer.Add(self.sizer[f'MATH{i}'],0)
-                if (i==1) or (i==3) or (i==5):
-                    main_sizer.Add(wx.StaticLine(self.panel), 20, wx.ALL|wx.EXPAND, 20)
+                if (i==1) or (i==3) or (i==5) or (i==7):
+                    main_sizer.Add(wx.StaticLine(self.panel), 30, wx.ALL|wx.EXPAND, 30)
 
 
 

@@ -189,12 +189,8 @@ def read_config_file(filename):
         config = {}
     return config, flag
 
-
-if __name__ == "__main__": #for testing
-    import logging
-    from tempfile import gettempdir
-    config, flag = read_config_file('/tmp/config_template.conf')
-
+def start(config_file = ''):
+    config, flag = read_config_file(config_file)
     device = Device()
     device.config = config
     device.init()
@@ -203,7 +199,13 @@ if __name__ == "__main__": #for testing
     print(device.driver.read(1000))
     device.driver.start_scan()
     device.start()
+    return device
 
+if __name__ == "__main__": #for testing
+    import logging
+    from tempfile import gettempdir
+
+    device = start(config_file = '/tmp/config_template.conf')
 
     logging.basicConfig(#filename=gettempdir()+'/DI_USB_BULK_DL.log',
                         level=logging.DEBUG, format="%(asctime)s %(levelname)s: %(message)s")
