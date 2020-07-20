@@ -8,7 +8,7 @@ Start by importing dataq di 2008 library.
 
     import dataq_di_2008
 
-======
+
 Driver
 ======
 
@@ -17,3 +17,6 @@ Inspect whether the device is correctly connected to the computer and if it can 
 .. code-block:: python
 
     from dataq_di_2008 import Driver
+
+    .. autoclass:: circular_buffer_numpy.queue.Queue
+      :members:

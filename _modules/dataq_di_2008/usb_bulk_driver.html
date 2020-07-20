@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataq_di_2008.usb_bulk_driver &mdash; dataq di 2008  0.0.0.post15+g9934c7a documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> dataq di 2008 
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0.post15+g9934c7a
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../driver.html">Driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../device.html">Device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../min_versions.html">Minimum Version of Python and NumPy</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dataq di 2008 </a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>dataq_di_2008.usb_bulk_driver</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dataq_di_2008.usb_bulk_driver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DATAQ USB Bulk driver level code</span>
+<span class="sd">author: Valentyn Stadnytskyi</span>
+<span class="sd">June 2018 - July 2020</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">nan</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">concatenate</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="nb">round</span><span class="p">,</span> <span class="n">vstack</span><span class="p">,</span> <span class="n">hstack</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">split</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">clock</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">pm</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">info</span><span class="p">,</span><span class="n">warn</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">error</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<div class="viewcode-block" id="Driver"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver">[docs]</a><span class="k">class</span> <span class="nc">Driver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#tested dec 17, 2017</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_ports</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s1">&#39;Last Point&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s1">&#39;Average&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s1">&#39;Maximum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s1">&#39;Minimum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+
+<div class="viewcode-block" id="Driver.init"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">idProduct</span> <span class="o">=</span> <span class="mh">0x2008</span><span class="p">,</span> <span class="n">serial_number</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialized the driver by discoving approproate device and connecting to it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discover</span><span class="p">(</span><span class="n">idProduct</span><span class="p">,</span><span class="n">serial_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_port</span><span class="p">()</span>
+
+        <span class="n">info</span><span class="p">(</span><span class="s2">&quot;initialization of the driver is complete&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Driver.get_information"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.get_information">[docs]</a>    <span class="k">def</span> <span class="nf">get_information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        auxiliary function to retrieve information about the connected USB device (on USB level).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dev_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">epi_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">dev</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">address</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bDeviceClass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">bDeviceClass</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bDescriptorType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">bDescriptorType</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bDeviceProtocol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">bDeviceProtocol</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bLength&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">bLength</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bMaxPacketSize0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">bMaxPacketSize0</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:bNumConfigurations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dev</span><span class="o">.</span><span class="n">bNumConfigurations</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:manufacturer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">manufacturer</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:serial_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">serial_number</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">speed</span>
+            <span class="n">dev_dict</span><span class="p">[</span><span class="s1">&#39;DEV:product&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">product</span>
+
+            <span class="c1">#endpoint IN description</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bmAttributes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bmAttributes</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:wMaxPacketSize&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">wMaxPacketSize</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bSynchAddress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bSynchAddress</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bInterval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bInterval</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bEndpointAddress&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bEndpointAddress</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bDescriptorType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bDescriptorType</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bInterval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bInterval</span>
+            <span class="n">epi_dict</span><span class="p">[</span><span class="s1">&#39;EPI:bInterval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bInterval</span>
+        <span class="k">return</span> <span class="n">dev_dic</span><span class="p">,</span><span class="n">epi_dict</span></div>
+
+<div class="viewcode-block" id="Driver.get_hardware_information"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.get_hardware_information">[docs]</a>    <span class="k">def</span> <span class="nf">get_hardware_information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        auxiliary function to retrieve information about connected instrument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">dic</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Device Manufacturer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 0 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 0 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">dic</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Device name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 1 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 1 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dic</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Firmware version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 2 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 2 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dic</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Serial Number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 6 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 6 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dic</span><span class="p">[</span><span class="sa">b</span><span class="s1">&#39;Sample Rate Divisor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 9 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;info 9 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">dic</span></div>
+
+<div class="viewcode-block" id="Driver.use_port"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.use_port">[docs]</a>    <span class="k">def</span> <span class="nf">use_port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        configure endpoints for the USB backend.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">usb.core</span>
+        <span class="kn">import</span> <span class="nn">usb.util</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># set the active configuration. With no arguments, the first</span>
+        <span class="c1"># configuration will be the active one</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">set_configuration</span><span class="p">()</span>
+
+        <span class="c1"># get an endpoint instance</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">get_active_configuration</span><span class="p">()</span>
+        <span class="n">intf</span> <span class="o">=</span> <span class="n">cfg</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">epo</span> <span class="o">=</span> <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_descriptor</span><span class="p">(</span>
+                                      <span class="n">intf</span><span class="p">,</span>
+                                      <span class="c1"># match the first OUT endpoint</span>
+                                      <span class="n">custom_match</span> <span class="o">=</span> \
+                                      <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> \
+                                      <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">endpoint_direction</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">bEndpointAddress</span><span class="p">)</span> <span class="o">==</span> \
+                                      <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">ENDPOINT_OUT</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">epi</span> <span class="o">=</span> <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_descriptor</span><span class="p">(</span>
+                                      <span class="n">intf</span><span class="p">,</span>
+                                      <span class="c1"># match the first IN endpoint</span>
+                                      <span class="n">custom_match</span> <span class="o">=</span> \
+                                      <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> \
+                                      <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">endpoint_direction</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">bEndpointAddress</span><span class="p">)</span> <span class="o">==</span> \
+                                      <span class="n">usb</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">ENDPOINT_IN</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">epo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">epi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">wMaxPacketSize</span> <span class="o">=</span> <span class="mi">7200000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epo</span><span class="o">.</span><span class="n">wMaxPacketSize</span> <span class="o">=</span> <span class="mi">7200000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bmAttributes</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">bInterval</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usb_buff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="o">.</span><span class="n">wMaxPacketSize</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Driver.discover"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.discover">[docs]</a>    <span class="k">def</span> <span class="nf">discover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idProduct</span> <span class="o">=</span> <span class="mh">0x2008</span><span class="p">,</span> <span class="n">serial_number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        the function allows to discover DI-2008 device.</span>
+
+<span class="sd">        returns: flag if a device(devices) are found.</span>
+
+<span class="sd">        assigns: self.available_ports list entry</span>
+<span class="sd">                [0] - COM port namer</span>
+<span class="sd">                [1] - serial number</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">usb.core</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">dev</span> <span class="o">=</span> <span class="n">usb</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">idVendor</span><span class="o">=</span><span class="mh">0x0683</span><span class="p">,</span> <span class="n">idProduct</span><span class="o">=</span><span class="n">idProduct</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dev</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Device not found&#39;</span><span class="p">)</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dev</span><span class="o">.</span><span class="n">serial_number</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span> <span class="o">==</span> <span class="n">serial_number</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Device with serial number </span><span class="si">{</span><span class="n">serial_number</span><span class="si">}</span><span class="s1"> is not found&#39;</span><span class="p">)</span>
+                <span class="n">dev</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">dev</span></div>
+
+
+    <span class="c1">#####Basic serial communication functions</span>
+
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">N</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">usb_buff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">usb_buff</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">usb_buff</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+        <span class="c1">#tested dec 17, 2017</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epi</span><span class="p">,</span><span class="n">usb_buff</span><span class="p">,</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">string</span> <span class="o">+=</span> <span class="nb">bytes</span><span class="p">([</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="k">def</span> <span class="nf">readall</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">usb_buff</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">command</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epo</span><span class="p">,</span><span class="n">command</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">inquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">command</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">usb_buff</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">config_digital</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="c1">#tested dec 17, 2017</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;endo &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span>
+        <span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">echo</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;endo &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">flag</span>
+
+    <span class="k">def</span> <span class="nf">set_digital</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="c1">#tested dec 17, 2017</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;dout &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">echo</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span>
+            <span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">a</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="s1">&#39;dout &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">flag</span>
+
+<div class="viewcode-block" id="Driver.set_analog"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.set_analog">[docs]</a>    <span class="k">def</span> <span class="nf">set_analog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel_list</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        example:</span>
+<span class="sd">        channel_list = [&#39;T-thrmc&#39;,&#39;5&#39;,&#39;T-thrmc&#39;,&#39;5&#39;,&#39;T-thrmc&#39;,&#39;5&#39;,&#39;T-thrmc&#39;,&#39;5&#39;,&#39;digital&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">traceback</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">cmd_string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">cmd_resp</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">channel_list</span><span class="p">:</span>
+            <span class="n">strngs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_analog_channels</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="s1">&#39;slist &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">strngs</span><span class="p">)</span>
+            <span class="n">cmd_string</span> <span class="o">+=</span> <span class="n">command</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span>
+            <span class="n">cmd_resp</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="n">cmd_string</span><span class="o">+=</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span>
+        <span class="k">if</span> <span class="n">cmd_resp</span> <span class="o">==</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">cmd_string</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;Latin-1&#39;</span><span class="p">):</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">echo</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">cmd_resp</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">cmd_string</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">flag</span></div>
+
+<div class="viewcode-block" id="Driver.config_analog_channels"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.config_analog_channels">[docs]</a>    <span class="k">def</span> <span class="nf">config_analog_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">setting</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        takes a string input that specifies range</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_config_dict_gain</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.010&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00101&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.025&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00100&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.05&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00011&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00010&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.25&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00001&#39;</span> <span class="c1">#works</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;0.5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00000&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01101&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;2.5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01100&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01011&#39;</span> <span class="c1">#</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01010&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;25&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01001&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;50&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;01000&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;B-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;10000&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;E-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;10001&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;J-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;10010&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;K-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;10011&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;N-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10100&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;R-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10101&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;S-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10110&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;T-thrmc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10111&#39;</span>
+        <span class="n">_config_dict_gain</span><span class="p">[</span><span class="s1">&#39;digital&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;00000&#39;</span>
+
+        <span class="n">config_byte</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="s1">&#39;000&#39;</span> <span class="o">+</span> <span class="n">_config_dict_gain</span><span class="p">[</span><span class="n">setting</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;0000&#39;</span> <span class="o">+</span> <span class="nb">bin</span><span class="p">(</span><span class="n">channel</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">config_byte</span></div>
+
+<div class="viewcode-block" id="Driver.set_filter"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.set_filter">[docs]</a>    <span class="k">def</span> <span class="nf">set_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="nb">filter</span> <span class="o">=</span> <span class="s1">&#39;Average&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        self.filters[&#39;Last Point&#39;] = 0</span>
+<span class="sd">        self.filters[&#39;Average&#39;] = 1</span>
+<span class="sd">        self.filters[&#39;Maximum&#39;] = 2</span>
+<span class="sd">        self.filters[&#39;Minimum&#39;] = 3</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="nb">filter</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;filter * &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span>
+        <span class="c1">#print(&#39;%r&#39; % (a + b))</span>
+        <span class="k">if</span> <span class="n">echo</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;filter * 0&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">set_packet_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="mi">128</span><span class="p">):</span>
+        <span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">dic</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ps 0&#39;</span>
+        <span class="n">dic</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ps 1&#39;</span>
+        <span class="n">dic</span><span class="p">[</span><span class="mi">64</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ps 2&#39;</span>
+        <span class="n">dic</span><span class="p">[</span><span class="mi">128</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ps 3&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="n">dic</span><span class="p">[</span><span class="n">size</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Driver.set_sampling_rate"><a class="viewcode-back" href="../../driver.html#dataq_di_2008.usb_bulk_driver.Driver.set_sampling_rate">[docs]</a>    <span class="k">def</span> <span class="nf">set_sampling_rate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">baserate</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integer ranges for both variable are:</span>
+<span class="sd">        4 ≤ srate ≤ 2232</span>
+<span class="sd">        1 ≤ dec ≤ 32767</span>
+<span class="sd">        The formula to calculate sample throughput rate differs by the number of enabled channels. For a single enabled analog channel:</span>
+<span class="sd">        Sample rate throughput (Hz) = 8,000 ÷ (srate × dec)</span>
+<span class="sd">        resulting in a sample throughput range of 2000 Hz at its fastest, and 0.000109 Hz, or 1 sample every 9141.99 seconds.</span>
+<span class="sd">        The formula changes when two or more analog channels are enabled:</span>
+<span class="sd">        Sample rate throughput (Hz) = 800 ÷ (srate × dec)</span>
+<span class="sd">        resulting in a sample throughput range of 200 Hz at its fastest, and 0.000011 Hz, or 1 sample every 91419.93 seconds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dec</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dec</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">baserate</span><span class="o">/</span><span class="n">rate</span><span class="p">)</span>
+
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;srate &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">800</span><span class="o">/</span><span class="n">baserate</span><span class="p">))</span>
+        <span class="c1">#self.ser.write(&#39;srate 6000000\r&#39;) # Supposedly sets it to read at 50kHz, Hz=60000000/srate</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="s1">&#39;dec &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+        <span class="c1">#print(&#39;%r,%r&#39; % (a,b))</span>
+        <span class="k">if</span> <span class="n">echo</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span> <span class="o">==</span> <span class="s1">&#39;srate &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">800</span><span class="o">/</span><span class="n">baserate</span><span class="p">))</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\r\x00</span><span class="s1">&#39;</span><span class="o">+</span><span class="s1">&#39;dec &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\x00</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dec</span> <span class="o">=</span> <span class="n">dec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling_rate</span> <span class="o">=</span> <span class="n">rate</span>
+        <span class="k">return</span> <span class="n">flag</span></div>
+
+    <span class="k">def</span> <span class="nf">start_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span><span class="p">(</span><span class="s1">&#39;The configured measurement(s) has(have) started&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;start 0</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">(</span><span class="s2">&quot;measurement ended&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;stop</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">info</span><span class="p">(</span><span class="s2">&quot;measurement ended&quot;</span><span class="p">)</span>
+
+
+    <span class="sd">&quot;&quot;&quot;Advance function&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">config_channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">conf_digital</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span> <span class="n">set_digital</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">baserate</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_digital</span><span class="p">(</span><span class="n">conf_digital</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_digital</span><span class="p">(</span><span class="n">set_digital</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="n">echo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_acquisition_rate</span><span class="p">(</span><span class="n">rate</span> <span class="o">=</span> <span class="n">rate</span><span class="p">,</span> <span class="n">dec</span> <span class="o">=</span> <span class="n">dec</span><span class="p">,</span> <span class="n">baserate</span> <span class="o">=</span> <span class="n">baserate</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="c1">#3000 gives maximum rate</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">b</span><span class="o">*</span><span class="n">c</span>
+
+    <span class="k">def</span> <span class="nf">get_readings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points_to_read</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span> <span class="n">to_read_analog</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">to_read_digital</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+        <span class="n">to_read</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_read_analog</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">to_read_digital</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">to_read</span><span class="o">*</span><span class="n">points_to_read</span><span class="p">)</span>
+        <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;stop&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">unpack</span><span class="p">((</span><span class="s1">&#39;h&#39;</span><span class="o">*</span><span class="n">to_read_analog</span><span class="o">+</span><span class="s1">&#39;BB&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">points_to_read</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+
+            <span class="c1">#analog_data = asarray(unpack(&#39;h&#39;*to_read_analog,res[0:to_read_analog*2])) #this will be</span>
+        <span class="c1">#first N bytes (where N/2 is number of analog channels to read</span>
+        <span class="c1">#see https://docs.python.org/2/library/struct.html for &#39;h&#39; description</span>
+            <span class="c1">#digital_data = array(unpack(&#39;B&#39;,res[-1:])[0])</span>
+        <span class="c1">#This how we can format the integer to binary string ----&gt;&gt; bin(unpack(&#39;B&#39;,res[-1])[0])[2:].zfill(7).split()</span>
+        <span class="c1">#this will unpack the very last byte as binary and make sure to</span>
+        <span class="c1">#keep the leading zero. The very first zero &#39;D7&#39; byte count 18 (see manual) is ommited.</span>
+        <span class="c1">#will be shown as a string. We need to convert it to a numpy array for easier usage</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">transpose</span><span class="p">(</span><span class="n">asarray</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">points_to_read</span><span class="p">)))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">flag</span> <span class="c1">#(analog_data,digital_data)</span>
+
+    <span class="k">def</span> <span class="nf">blink</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;led &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;led &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+    <span class="sd">&quot;&quot;&quot;Test functions&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">self_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;led 7</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="mf">0.001</span>
+        <span class="c1">#dictionary with device parameters such as S\N, device name, ect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;Device name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;info 1 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;info 1 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;Firmware version&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;info 2 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;info 2 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;Serial Number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;info 6 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;info 6 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;Sample Rate Divisor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;info 9 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;info 9 &#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1">#Useful variables</span>
+        <span class="c1">#wait time after write (before) read. This seems to be not necessary.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1">, </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;information request complete: the DI-4108 with SN </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">dict</span><span class="p">[</span><span class="s1">&#39;Serial Number&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">inquire</span><span class="p">(</span><span class="s1">&#39;led 2</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">test1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_test</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">start_t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start_t</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%0.5f</span><span class="s2"> </span><span class="si">%r</span><span class="s2"> </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start_t</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">get_readings</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test 1 is Done. IN buffer has all data&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data = dev.get_readings()&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;buffer waiting </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">test2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_test</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;time </span><span class="si">%r</span><span class="s1"> and value </span><span class="si">%r</span><span class="s1">&#39;</span><span class="o">%</span> <span class="p">(</span><span class="n">time</span><span class="p">(),</span><span class="bp">self</span><span class="o">.</span><span class="n">get_readings</span><span class="p">()))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test 2 is Done&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_test</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waiting</span><span class="p">())</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_readings</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test 2 is Done&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">echo_test1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">start_t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span><span class="p">()</span><span class="o">-</span> <span class="n">start_t</span> <span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;dout 0</span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;dout 127 </span><span class="se">\r</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.06</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">readall</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">performance_test1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_test</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span><span class="mi">10000</span><span class="p">:</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mf">0.001</span><span class="p">)</span>
+        <span class="n">start_t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test 1 is Done. IN buffer has all data&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data = dev.get_readings(10)&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;buffer waiting </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;t = Timer(lambda: dev.get_readings(N))&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;print t.timeit(number = M)&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">performance_test2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_test</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_channels</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+        <span class="n">start_t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">time_st</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start_t</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span> <span class="mi">512</span><span class="o">*</span><span class="mi">16</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_readings</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">start_t</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">],(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">time_st</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">])</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%r</span><span class="s2"> </span><span class="si">%0.10f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">time_st</span><span class="p">)</span><span class="o">*</span><span class="mi">1000</span><span class="p">))</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">24</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span> <span class="c1">#wait for 12.8 ms</span>
+        <span class="n">start_t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;time between 4 kS = </span><span class="si">%0.5f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">mean</span><span class="p">(</span><span class="mf">10.0</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">)))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sampling rate: </span><span class="si">%0.1f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">512</span><span class="o">/</span><span class="n">mean</span><span class="p">(</span><span class="mf">10.0</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst</span><span class="p">))))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test 1 is Done. IN buffer has all data&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;data = dev.get_readings(10)&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;buffer waiting </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;t = Timer(lambda: dev.get_readings(N))&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;print t.timeit(number = M)&#39;</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1">#for testing</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">gettempdir</span>
+    <span class="bp">self</span> <span class="o">=</span> <span class="n">driver</span>
+
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="c1">#filename=gettempdir()+&#39;/DI_USB_BULK_LL.log&#39;,</span>
+                        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.self_test()&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.test1()&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.test2()&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.echo_test1()&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.performance_test1()&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;self.performance_test2()&#39;</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Valentyn Stadnytskyi
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

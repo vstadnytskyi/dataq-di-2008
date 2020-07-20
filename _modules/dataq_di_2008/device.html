@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>dataq_di_2008.device &mdash; dataq di 2008  0.0.0.post15+g9934c7a documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> dataq di 2008 
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.0.0.post15+g9934c7a
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../driver.html">Driver</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../device.html">Device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config_file.html">Configuration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release-history.html">Release History</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../min_versions.html">Minimum Version of Python and NumPy</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">dataq di 2008 </a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>dataq_di_2008.device</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dataq_di_2008.device</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DATAQ USB Bulk device level code</span>
+<span class="sd">author: Valentyn Stadnytskyi</span>
+<span class="sd">June 2018 - June 2018</span>
+
+<span class="sd">1.0.0 - designed for usb Bulk protocol.</span>
+<span class="sd">1.0.1 - dec is added to the communication</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">nan</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">,</span> <span class="n">asarray</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">concatenate</span><span class="p">,</span> <span class="n">delete</span><span class="p">,</span> <span class="nb">round</span><span class="p">,</span> <span class="n">vstack</span><span class="p">,</span> <span class="n">hstack</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">transpose</span><span class="p">,</span> <span class="n">split</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">clock</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">pdb</span> <span class="kn">import</span> <span class="n">pm</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">gmtime</span><span class="p">,</span> <span class="n">strftime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="kn">from</span> <span class="nn">logging</span> <span class="kn">import</span> <span class="n">info</span><span class="p">,</span><span class="n">warn</span><span class="p">,</span> <span class="n">debug</span><span class="p">,</span> <span class="n">error</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0.1&#39;</span>
+
+<div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../device.html#dataq_di_2008.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Device.init"><a class="viewcode-back" href="../../device.html#dataq_di_2008.Device.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initializes device level. takes configuration dictionary supplied by configuration file saved in yaml format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">info</span><span class="p">(</span><span class="s2">&quot;initialization of the device is complete&quot;</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">circular_buffer_numpy.circular_buffer</span> <span class="kn">import</span> <span class="n">CircularBuffer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span> <span class="o">=</span> <span class="n">CircularBuffer</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10000</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s1">&#39;int16&#39;</span><span class="p">)</span>
+
+        <span class="kn">from</span> <span class="nn">dataq_di_2008</span> <span class="kn">import</span> <span class="n">Driver</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">Driver</span><span class="p">()</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">idProduct</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;PID&#39;</span><span class="p">],</span><span class="n">serial_number</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;serial number&#39;</span><span class="p">])</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">set_sampling_rate</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sample rate&#39;</span><span class="p">])</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">set_analog</span><span class="p">(</span><span class="n">channel_list</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;channel config&#39;</span><span class="p">])</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">config_digital</span><span class="p">(</span><span class="n">number</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;digital config&#39;</span><span class="p">])</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">set_packet_size</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;packet size&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">network_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;network name&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span></div>
+        <span class="c1"># self.driver.stop_scan()</span>
+        <span class="c1"># self.driver.start_scan()</span>
+
+
+<div class="viewcode-block" id="Device.close"><a class="viewcode-back" href="../../device.html#dataq_di_2008.Device.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ordely stop of all operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Device.kill"><a class="viewcode-back" href="../../device.html#dataq_di_2008.Device.kill">[docs]</a>    <span class="k">def</span> <span class="nf">kill</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        orderly exit and shutdown of the device</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ubcs_auxiliary.multithreading</span> <span class="kn">import</span> <span class="n">new_thread</span>
+        <span class="n">new_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">running</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_once</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">run_once</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">mean</span>
+        <span class="n">data</span><span class="p">,</span><span class="n">flag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_readings</span><span class="p">(</span><span class="n">points_to_read</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">io_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">io_dict</span><span class="p">[</span><span class="s1">&#39;DIO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">io_dict</span><span class="p">[</span><span class="s1">&#39;AIO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+            <span class="n">io_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;CH</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_push</span><span class="p">(</span><span class="n">io_dict</span> <span class="o">=</span> <span class="n">io_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_readings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points_to_read</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">to_read_analog</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">to_read_digital</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">to_read</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">to_read_analog</span><span class="o">+</span><span class="n">to_read_digital</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">to_read</span><span class="o">*</span><span class="n">points_to_read</span><span class="p">,</span> <span class="n">timeout</span> <span class="o">=</span> <span class="mi">4000</span><span class="p">)</span>
+        <span class="k">if</span> <span class="sa">b</span><span class="s1">&#39;stop&#39;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">unpack</span><span class="p">((</span><span class="s1">&#39;h&#39;</span><span class="o">*</span><span class="n">to_read_analog</span><span class="o">+</span><span class="s1">&#39;BB&#39;</span><span class="p">)</span><span class="o">*</span><span class="n">points_to_read</span><span class="p">,</span><span class="n">result</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">asarray</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">points_to_read</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">error</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">())</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">flag</span> <span class="c1">#(analog_data,digital_data)</span>
+
+
+    <span class="k">def</span> <span class="nf">io_push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">io_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">io_dict</span><span class="p">)</span>
+
+    <span class="sd">&quot;&quot;&quot;Test functions&quot;&quot;&quot;</span></div>
+
+<span class="kn">from</span> <span class="nn">caproto.server</span> <span class="kn">import</span> <span class="n">pvproperty</span><span class="p">,</span> <span class="n">PVGroup</span><span class="p">,</span> <span class="n">ioc_arg_parser</span><span class="p">,</span> <span class="n">run</span>
+<span class="kn">import</span> <span class="nn">caproto</span>
+<span class="kn">from</span> <span class="nn">textwrap</span> <span class="kn">import</span> <span class="n">dedent</span>
+
+<div class="viewcode-block" id="Server"><a class="viewcode-back" href="../../device.html#dataq_di_2008.Server">[docs]</a><span class="k">class</span> <span class="nc">Server</span><span class="p">(</span><span class="n">PVGroup</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An IOC with three uncoupled read/writable PVs</span>
+
+<span class="sd">    Scalar PVs</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Vectors PVs</span>
+<span class="sd">    -----------</span>
+<span class="sd">    AIO</span>
+<span class="sd">    DIO</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">AIO</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">DIO</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+
+    <span class="n">CH0</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH1</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH2</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH3</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH4</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH5</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH6</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+    <span class="n">CH7</span> <span class="o">=</span> <span class="n">pvproperty</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+
+
+    <span class="nd">@AIO</span><span class="o">.</span><span class="n">startup</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">AIO</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">async_lib</span><span class="p">):</span>
+        <span class="c1"># This method will be called when the server starts up.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_pull_queue</span> <span class="o">=</span> <span class="n">async_lib</span><span class="o">.</span><span class="n">ThreadsafeQueue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span> <span class="o">=</span> <span class="n">async_lib</span><span class="o">.</span><span class="n">ThreadsafeQueue</span><span class="p">()</span>
+        <span class="n">device</span><span class="o">.</span><span class="n">io_push_queue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span>
+
+        <span class="c1"># Loop and grab items from the response queue one at a time</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">io_dict</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io_push_queue</span><span class="o">.</span><span class="n">async_get</span><span class="p">()</span>
+            <span class="c1"># Propagate the keypress to the EPICS PV, triggering any monitors</span>
+            <span class="c1"># along the way</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">io_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;AIO&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">AIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;DIO&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">DIO</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH0&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH1&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH2&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH2</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH3&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH3</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH4&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH4</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH5&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH5</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH6&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH6</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;CH7&#39;</span><span class="p">:</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">CH7</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">io_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+
+<span class="k">def</span> <span class="nf">read_config_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">yaml</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="n">flag</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>  <span class="c1"># (2)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">config</span><span class="p">,</span> <span class="n">flag</span>
+
+<span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="n">config_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">dataq_di_2008</span> <span class="kn">import</span> <span class="n">Device</span><span class="p">,</span><span class="n">read_config_file</span>
+    <span class="n">config</span><span class="p">,</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">read_config_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="n">Device</span><span class="p">()</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">stop_scan</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">start_scan</span><span class="p">()</span>
+    <span class="n">device</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">device</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> <span class="c1">#for testing</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">gettempdir</span>
+
+    <span class="n">device</span> <span class="o">=</span> <span class="n">start</span><span class="p">(</span><span class="n">config_file</span> <span class="o">=</span> <span class="s1">&#39;/tmp/config_template.conf&#39;</span><span class="p">)</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="c1">#filename=gettempdir()+&#39;/DI_USB_BULK_DL.log&#39;,</span>
+                        <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">: </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ioc_options</span><span class="p">,</span> <span class="n">run_options</span> <span class="o">=</span> <span class="n">ioc_arg_parser</span><span class="p">(</span>
+        <span class="n">default_prefix</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;network name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">dedent</span><span class="p">(</span><span class="n">Server</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">))</span>
+    <span class="n">ioc</span> <span class="o">=</span> <span class="n">Server</span><span class="p">(</span><span class="o">**</span><span class="n">ioc_options</span><span class="p">)</span>
+    <span class="n">run</span><span class="p">(</span><span class="n">ioc</span><span class="o">.</span><span class="n">pvdb</span><span class="p">,</span> <span class="o">**</span><span class="n">run_options</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Valentyn Stadnytskyi
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

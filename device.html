@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; dataq di 2008  0.0.0.post15+g9934c7a documentation</title>
+  <title>Device &mdash; dataq di 2008  0.0.0.post15+g9934c7a documentation</title>
   
 
   
@@ -39,8 +39,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Usage" href="usage.html" />
-    <link rel="prev" title="dataq di 2008 Documentation" href="index.html" /> 
+    <link rel="next" title="Configuration File" href="config_file.html" />
+    <link rel="prev" title="Driver" href="driver.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,10 +90,10 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="driver.html">Driver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="device.html">Device</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Device</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config_file.html">Configuration File</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-history.html">Release History</a></li>
 <li class="toctree-l1"><a class="reference internal" href="min_versions.html">Minimum Version of Python and NumPy</a></li>
@@ -143,13 +143,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Installation</li>
+      <li>Device</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/device.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -162,13 +162,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>At the command line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip3 install dataq-di-2008
-</pre></div>
-</div>
-<p>this command will install the dataq-di-2008 python library in python3 repository folder.</p>
+  <div class="section" id="device">
+<h1>Device<a class="headerlink" href="#device" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="dataq_di_2008.Device">
+<em class="property">class </em><code class="sig-prename descclassname">dataq_di_2008.</code><code class="sig-name descname">Device</code><a class="reference internal" href="_modules/dataq_di_2008/device.html#Device"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataq_di_2008.Device" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="dataq_di_2008.Device.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataq_di_2008/device.html#Device.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataq_di_2008.Device.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>ordely stop of all operations</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dataq_di_2008.Device.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataq_di_2008/device.html#Device.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataq_di_2008.Device.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>initializes device level. takes configuration dictionary supplied by configuration file saved in yaml format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="dataq_di_2008.Device.kill">
+<code class="sig-name descname">kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataq_di_2008/device.html#Device.kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataq_di_2008.Device.kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>orderly exit and shutdown of the device</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="dataq_di_2008.device.Server">
+<em class="property">class </em><code class="sig-prename descclassname">dataq_di_2008.device.</code><code class="sig-name descname">Server</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prefix</span></em>, <em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">macros</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dataq_di_2008/device.html#Server"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dataq_di_2008.device.Server" title="Permalink to this definition">¶</a></dt>
+<dd><p>An IOC with three uncoupled read/writable PVs</p>
+</dd></dl>
+
 </div>
 
 
@@ -179,10 +203,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="config_file.html" class="btn btn-neutral float-right" title="Configuration File" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral float-left" title="dataq di 2008 Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="driver.html" class="btn btn-neutral float-left" title="Driver" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
