@@ -5,7 +5,12 @@ June 2018 - July 2020
 """
 
 from numpy import nan, mean, std, asarray, array, concatenate, delete, round, vstack, hstack, zeros, transpose, split
-from time import time, sleep, clock
+import sys
+if sys.version_info[0] == 3 and sys.version_info[1]>7:
+    from time import time, sleep
+    from time import perf_clock as clock
+else:
+    from time import time, sleep, clock
 import sys
 import os.path
 import struct
