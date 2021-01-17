@@ -9,7 +9,7 @@ June 2018 - June 2018
 """
 
 from numpy import nan, mean, std, asarray, array, concatenate, delete, round, vstack, hstack, zeros, transpose, split
-from time import time, sleep, clock
+from time import time, sleep
 import sys
 import os.path
 import struct
